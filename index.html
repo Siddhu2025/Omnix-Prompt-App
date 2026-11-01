@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Omnix — Prompt Bank</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#023436">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Archivo+Black&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --deep: #023436;
+    --teal: #03B5AA;
+    --orange: #FF8552;
+    --cream: #F4F1EA;
+    --ink: #021F20;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html{ overflow-x:hidden; width:100%; }
+
+  body{
+    background:var(--cream);
+    background-image:
+      radial-gradient(circle, var(--deep) 1.5px, transparent 1.5px);
+    background-size: 26px 26px;
+    font-family:'Space Mono', monospace;
+    color:var(--ink);
+    min-height:100vh;
+    padding-bottom:80px;
+    overflow-x:hidden;
+    width:100%;
+  }
+
+  /* ===== HEADER ===== */
+  header{
+    background:var(--deep);
+    border-bottom:6px solid var(--ink);
+    padding:34px 5vw 30px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  header::before{
+    content:"";
+    position:absolute;
+    top:-40px; right:-40px;
+    width:180px; height:180px;
+    background:var(--orange);
+    border:6px solid var(--ink);
+    border-radius:50%;
+    opacity:0.9;
+  }
+
+  header::after{
+    content:"";
+    position:absolute;
+    bottom:-60px; left:15%;
+    width:120px; height:120px;
+    background:var(--teal);
+    border:6px solid var(--ink);
+    transform:rotate(20deg);
+    opacity:0.85;
+  }
+
+  .brand{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:baseline;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+
+  .brand h1{
+    font-family:'Archivo Black', sans-serif;
+    font-size:clamp(2.6rem, 7vw, 5rem);
+    color:var(--cream);
+    letter-spacing:-2px;
+    text-shadow: 4px 4px 0 var(--orange);
+  }
+
+  .brand span.tag{
+    background:var(--teal);
+    color:var(--ink);
+    font-weight:700;
+    font-size:0.85rem;
+    padding:6px 14px;
+    border:3px solid var(--ink);
+    text-transform:uppercase;
+    letter-spacing:1px;
+    box-shadow:4px 4px 0 var(--ink);
+  }
+
+  .brand-sub{
+    position:relative;
+    z-index:2;
+    color:var(--cream);
+    opacity:0.75;
+    margin-top:10px;
+    font-size:0.95rem;
+    max-width:520px;
+  }
+
+  .install-btn{
+    position:relative;
+    z-index:2;
+    margin-top:20px;
+    background:var(--teal);
+    color:var(--ink);
+    border:4px solid var(--ink);
+    box-shadow:6px 6px 0 var(--orange);
+    padding:14px 22px;
+    font-family:'Space Mono', monospace;
+    font-weight:700;
+    font-size:0.9rem;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    cursor:pointer;
+    transition:transform 0.12s ease, box-shadow 0.12s ease;
+  }
+
+  .install-btn:hover{
+    transform:translate(-3px,-3px);
+    box-shadow:9px 9px 0 var(--orange);
+  }
+
+  .install-btn:active{
+    transform:translate(2px,2px);
+    box-shadow:2px 2px 0 var(--orange);
+  }
+
+  /* ===== CONTROLS ===== */
+  .controls{
+    max-width:1100px;
+    margin:-26px auto 0;
+    padding:0 5vw;
+    position:relative;
+    z-index:5;
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+  }
+
+  .search-wrap{
+    flex:1 1 320px;
+    background:var(--cream);
+    border:4px solid var(--ink);
+    box-shadow:6px 6px 0 var(--ink);
+    display:flex;
+    align-items:center;
+    padding:0 16px;
+  }
+
+  .search-wrap svg{ flex-shrink:0; }
+
+  .search-wrap input{
+    flex:1;
+    border:none;
+    background:transparent;
+    outline:none;
+    padding:16px 12px;
+    font-family:'Space Mono', monospace;
+    font-size:1rem;
+    color:var(--ink);
+  }
+
+  .search-wrap input::placeholder{ color:#5a6b6a; }
+
+  .filter-wrap{
+    flex:0 0 auto;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+
+  .filter-btn{
+    background:var(--cream);
+    border:4px solid var(--ink);
+    box-shadow:6px 6px 0 var(--ink);
+    padding:14px 18px;
+    font-family:'Space Mono', monospace;
+    font-weight:700;
+    font-size:0.85rem;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    cursor:pointer;
+    transition:transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+    color:var(--ink);
+  }
+
+  .filter-btn:hover{
+    transform:translate(-2px,-2px);
+    box-shadow:8px 8px 0 var(--ink);
+  }
+
+  .filter-btn:active{
+    transform:translate(2px,2px);
+    box-shadow:2px 2px 0 var(--ink);
+  }
+
+  .filter-btn.active{
+    background:var(--orange);
+  }
+
+  /* ===== MOBILE: keep controls from overflowing the frame ===== */
+  @media (max-width:640px){
+    .controls{
+      flex-direction:column;
+      align-items:stretch;
+      gap:12px;
+    }
+
+    .search-wrap{
+      flex:1 1 auto;
+      width:100%;
+    }
+
+    .filter-wrap{
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      overscroll-behavior-x:contain;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+      width:100%;
+      padding-bottom:2px;
+    }
+
+    .filter-wrap::-webkit-scrollbar{ display:none; }
+
+    .filter-btn{
+      flex:0 0 auto;
+      white-space:nowrap;
+      padding:11px 15px;
+      font-size:0.78rem;
+      box-shadow:4px 4px 0 var(--ink);
+    }
+  }
+
+  /* ===== GRID ===== */
+  .grid-wrap{
+    max-width:1100px;
+    margin:50px auto 0;
+    padding:0 5vw;
+  }
+
+  .grid-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:24px;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+
+  .grid-header h2{
+    font-family:'Archivo Black', sans-serif;
+    font-size:1.6rem;
+    color:var(--deep);
+  }
+
+  .count-badge{
+    background:var(--teal);
+    border:3px solid var(--ink);
+    padding:6px 14px;
+    font-weight:700;
+    font-size:0.8rem;
+    box-shadow:3px 3px 0 var(--ink);
+  }
+
+  .cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+    gap:26px;
+  }
+
+  .card{
+    background:var(--cream);
+    border:4px solid var(--ink);
+    box-shadow:8px 8px 0 var(--ink);
+    padding:22px;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .card:hover{
+    transform:translate(-4px,-4px);
+    box-shadow:12px 12px 0 var(--ink);
+  }
+
+  .card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+  }
+
+  .card h3{
+    font-family:'Archivo Black', sans-serif;
+    font-size:1.25rem;
+    color:var(--deep);
+    line-height:1.2;
+  }
+
+  .type-pill{
+    flex-shrink:0;
+    font-size:0.7rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    padding:6px 12px;
+    border:3px solid var(--ink);
+    white-space:nowrap;
+  }
+
+  .type-writing{ background:var(--orange); }
+  .type-code{ background:var(--teal); }
+  .type-image{ background:#FFD166; }
+  .type-business{ background:#B892FF; }
+  .type-other{ background:#cfd8d8; }
+
+  .prompt-box{
+    background:var(--ink);
+    color:var(--cream);
+    padding:16px;
+    font-size:0.85rem;
+    line-height:1.55;
+    border:3px solid var(--deep);
+    max-height:180px;
+    overflow-y:auto;
+    white-space:pre-wrap;
+  }
+
+  .prompt-box::-webkit-scrollbar{ width:8px; }
+  .prompt-box::-webkit-scrollbar-thumb{ background:var(--teal); }
+  .prompt-box::-webkit-scrollbar-track{ background:var(--deep); }
+
+  .card-actions{
+    display:flex;
+    gap:10px;
+  }
+
+  .copy-btn{
+    flex:1;
+    background:var(--deep);
+    color:var(--cream);
+    border:3px solid var(--ink);
+    padding:10px;
+    font-family:'Space Mono', monospace;
+    font-weight:700;
+    font-size:0.75rem;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    cursor:pointer;
+    box-shadow:4px 4px 0 var(--ink);
+    transition:transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+  }
+
+  .copy-btn:hover{
+    transform:translate(-2px,-2px);
+    box-shadow:6px 6px 0 var(--ink);
+    background:var(--teal);
+    color:var(--ink);
+  }
+
+  .copy-btn:active{
+    transform:translate(1px,1px);
+    box-shadow:2px 2px 0 var(--ink);
+  }
+
+  .copy-btn.copied{ background:var(--orange); color:var(--ink); }
+
+  .empty-state{
+    grid-column:1/-1;
+    text-align:center;
+    padding:60px 20px;
+    border:4px dashed var(--ink);
+    background:rgba(255,255,255,0.4);
+  }
+
+  .empty-state h3{
+    font-family:'Archivo Black', sans-serif;
+    color:var(--deep);
+    font-size:1.4rem;
+    margin-bottom:8px;
+  }
+
+  /* ===== FAB ===== */
+  .fab{
+    position:fixed;
+    bottom:34px;
+    right:34px;
+    width:66px;
+    height:66px;
+    background:var(--orange);
+    border:4px solid var(--ink);
+    box-shadow:6px 6px 0 var(--ink);
+    font-family:'Archivo Black', sans-serif;
+    font-size:2rem;
+    color:var(--ink);
+    cursor:pointer;
+    z-index:50;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:transform 0.12s ease, box-shadow 0.12s ease;
+    line-height:1;
+  }
+
+  .fab:hover{
+    transform:translate(-3px,-3px) rotate(-4deg);
+    box-shadow:9px 9px 0 var(--ink);
+  }
+
+  .fab:active{
+    transform:translate(2px,2px);
+    box-shadow:2px 2px 0 var(--ink);
+  }
+
+  /* ===== CARD EDIT/DELETE ===== */
+  .card-icon-actions{
+    display:flex;
+    gap:8px;
+    flex-shrink:0;
+  }
+
+  .icon-btn{
+    background:var(--cream);
+    border:3px solid var(--ink);
+    width:32px;
+    height:32px;
+    flex-shrink:0;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:0.9rem;
+    box-shadow:3px 3px 0 var(--ink);
+    transition:transform 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+  }
+
+  .icon-btn:hover{
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--ink);
+  }
+
+  .icon-btn:active{
+    transform:translate(1px,1px);
+    box-shadow:1px 1px 0 var(--ink);
+  }
+
+  .icon-btn.delete-btn:hover{ background:#ff6b6b; }
+  .icon-btn.edit-btn:hover{ background:var(--teal); }
+
+  /* ===== MODAL ===== */
+  .modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(2,31,32,0.75);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:20px;
+  }
+
+  .modal-overlay.open{ display:flex; }
+
+  .modal{
+    background:var(--cream);
+    border:5px solid var(--ink);
+    box-shadow:10px 10px 0 var(--orange);
+    width:100%;
+    max-width:520px;
+    max-height:88vh;
+    overflow-y:auto;
+    padding:30px;
+  }
+
+  .modal h2{
+    font-family:'Archivo Black', sans-serif;
+    color:var(--deep);
+    font-size:1.6rem;
+    margin-bottom:22px;
+  }
+
+  .field-group{ margin-bottom:18px; }
+
+  .field-group label{
+    display:block;
+    font-weight:700;
+    font-size:0.75rem;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    margin-bottom:8px;
+    color:var(--deep);
+  }
+
+  .field-group input[type="text"],
+  .field-group textarea,
+  .field-group select{
+    width:100%;
+    border:3px solid var(--ink);
+    background:#fff;
+    padding:12px;
+    font-family:'Space Mono', monospace;
+    font-size:0.9rem;
+    color:var(--ink);
+    outline:none;
+  }
+
+  .field-group textarea{
+    min-height:130px;
+    resize:vertical;
+    line-height:1.5;
+  }
+
+  .field-group select{
+    cursor:pointer;
+    appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23023436' stroke-width='4'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 14px center;
+  }
+
+  .modal-actions{
+    display:flex;
+    gap:12px;
+    margin-top:24px;
+  }
+
+  .modal-btn{
+    flex:1;
+    border:3px solid var(--ink);
+    padding:14px;
+    font-family:'Space Mono', monospace;
+    font-weight:700;
+    font-size:0.85rem;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    cursor:pointer;
+    box-shadow:4px 4px 0 var(--ink);
+    transition:transform 0.12s ease, box-shadow 0.12s ease;
+  }
+
+  .modal-btn:hover{ transform:translate(-2px,-2px); box-shadow:6px 6px 0 var(--ink); }
+  .modal-btn:active{ transform:translate(1px,1px); box-shadow:2px 2px 0 var(--ink); }
+
+  .modal-btn.save{ background:var(--teal); color:var(--ink); }
+  .modal-btn.cancel{ background:var(--cream); color:var(--ink); }
+
+  @media (max-width:600px){
+    .brand h1{ text-shadow:3px 3px 0 var(--orange); }
+    .controls{ margin-top:-18px; }
+    .fab{ bottom:22px; right:22px; width:58px; height:58px; font-size:1.7rem; }
+    header{ padding:28px 6vw 26px; }
+    .grid-wrap{ padding:0 6vw; }
+    .cards{ grid-template-columns:1fr; gap:20px; }
+    .install-btn{ width:100%; text-align:center; }
+    .card{ padding:18px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <h1>OMNIX</h1>
+    <span class="tag">Prompt Bank</span>
+  </div>
+  <p class="brand-sub">Your personal vault of prompts — stored, searchable, and one click away from copied.</p>
+  <button class="install-btn" id="installBtn" style="display:none;">⬇ Install App</button>
+</header>
+
+<div class="modal-overlay" id="installModalOverlay">
+  <div class="modal">
+    <h2>Install Omnix</h2>
+    <div id="installInstructions" style="font-size:0.9rem; line-height:1.7; color:var(--ink);"></div>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" id="installModalCloseBtn" style="flex:1;">Got it</button>
+    </div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#023436" stroke-width="3">
+      <circle cx="11" cy="11" r="7"/>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input id="searchInput" type="text" placeholder="Search your prompts...">
+  </div>
+  <div class="filter-wrap" id="filterWrap"></div>
+</div>
+
+<div class="grid-wrap">
+  <div class="grid-header">
+    <h2>Your Prompts</h2>
+    <span class="count-badge" id="countBadge">3 saved</span>
+  </div>
+  <div class="cards" id="cardsGrid"></div>
+</div>
+
+<button class="fab" id="fabBtn" title="Add new prompt">+</button>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h2 id="modalTitle">Add New Prompt</h2>
+    <div class="field-group">
+      <label for="fieldTitle">Heading</label>
+      <input type="text" id="fieldTitle" placeholder="e.g. Blog Intro Hook">
+    </div>
+    <div class="field-group">
+      <label for="fieldType">Type</label>
+      <select id="fieldType">
+        <option value="__add_new__">+ Add New Tag...</option>
+      </select>
+    </div>
+    <div class="field-group" id="newTagGroup" style="display:none;">
+      <label for="fieldNewTag">New Tag Name</label>
+      <input type="text" id="fieldNewTag" placeholder="e.g. Marketing">
+    </div>
+    <div class="field-group">
+      <label for="fieldText">Prompt</label>
+      <textarea id="fieldText" placeholder="Paste or write your prompt here..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" id="cancelBtn">Cancel</button>
+      <button class="modal-btn save" id="saveBtn">Save Prompt</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.js"></script>
+<script>
+  // ===== SUPABASE CONFIG — paste your own values here =====
+  const SUPABASE_URL = 'https://wdgciiwxeedhirgtllqu.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkZ2NpaXd4ZWVkaGlyZ3RsbHF1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM1MTI2NjgsImV4cCI6MjEwOTA4ODY2OH0.J2y9MMiLiyFuOHJPKAIf5wTj7KHV9mt3KifA43RGB7Q';
+  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const defaultPrompts = [
+    {
+      id: 'p1',
+      title: "Blog Intro Hook",
+      type: "writing",
+      text: "Write a compelling 3-sentence introduction for a blog post about [TOPIC]. Start with a surprising fact or bold claim, then a relatable pain point, then a promise of what the reader will learn. Keep tone conversational and punchy."
+    },
+    {
+      id: 'p2',
+      title: "React Component Refactor",
+      type: "code",
+      text: "Refactor the following React component to use hooks instead of class syntax. Preserve all existing functionality, add prop-types validation, and add inline comments explaining any non-obvious logic:\n\n[PASTE CODE HERE]"
+    },
+    {
+      id: 'p3',
+      title: "Product Launch Caption",
+      type: "business",
+      text: "Write an Instagram caption announcing the launch of [PRODUCT NAME]. Include: a scroll-stopping first line, 2-3 key benefits, a sense of urgency or exclusivity, and a clear call-to-action. Add 5 relevant hashtags at the end."
+    }
+  ];
+
+  // Default tags. Custom ones added by the user get appended here (persisted).
+  const defaultTags = [
+    { id: 'writing',  label: 'Writing',  color: '#FF8552' },
+    { id: 'code',     label: 'Code',     color: '#03B5AA' },
+    { id: 'image',    label: 'Image',    color: '#FFD166' },
+    { id: 'business', label: 'Business', color: '#B892FF' },
+    { id: 'other',    label: 'Other',    color: '#cfd8d8' }
+  ];
+
+  // Palette to auto-assign to new custom tags, cycled through.
+  const tagColorPalette = ['#FF8552', '#03B5AA', '#FFD166', '#B892FF', '#7CE7A3', '#FF6B9D', '#8AB6FF', '#cfd8d8'];
+
+  const cardsGrid = document.getElementById('cardsGrid');
+  const searchInput = document.getElementById('searchInput');
+  const filterWrap = document.getElementById('filterWrap');
+  const countBadge = document.getElementById('countBadge');
+  const fabBtn = document.getElementById('fabBtn');
+  const modalOverlay = document.getElementById('modalOverlay');
+  const modalTitle = document.getElementById('modalTitle');
+  const fieldTitle = document.getElementById('fieldTitle');
+  const fieldType = document.getElementById('fieldType');
+  const fieldText = document.getElementById('fieldText');
+  const newTagGroup = document.getElementById('newTagGroup');
+  const fieldNewTag = document.getElementById('fieldNewTag');
+  const saveBtn = document.getElementById('saveBtn');
+  const cancelBtn = document.getElementById('cancelBtn');
+
+  let promptData = [];
+  let tagData = [];
+  let activeFilter = 'all';
+  let searchTerm = '';
+  let editingId = null; // null = adding new, otherwise editing existing id
+
+  function genId(prefix){
+    return prefix + Date.now() + Math.floor(Math.random()*1000);
+  }
+
+  function slugify(str){
+    return str.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || genId('tag');
+  }
+
+  function getTag(id){
+    return tagData.find(t => t.id === id) || { id, label: id, color: '#cfd8d8' };
+  }
+
+  // ===== Load / Save (Supabase) =====
+  async function loadTags(){
+    const { data, error } = await db.from('tags').select('*').order('created_at', { ascending: true });
+    if(error){ console.error('Load tags failed', error); tagData = defaultTags; return; }
+    if(!data || data.length === 0){
+      tagData = defaultTags;
+      await saveTags(); // seed defaults on first run
+    } else {
+      tagData = data.map(t => ({ id: t.id, label: t.label, color: t.color }));
+    }
+  }
+
+  async function saveTags(){
+    const { error } = await db.from('tags').upsert(tagData);
+    if(error) console.error('Save tags failed', error);
+  }
+
+  async function loadPrompts(){
+    const { data, error } = await db.from('prompts').select('*').order('created_at', { ascending: true });
+    if(error){ console.error('Load prompts failed', error); promptData = []; return; }
+    if(!data || data.length === 0){
+      promptData = defaultPrompts;
+      const { error: seedErr } = await db.from('prompts').upsert(defaultPrompts);
+      if(seedErr) console.error('Seeding demo prompts failed', seedErr);
+    } else {
+      promptData = data.map(p => ({ id: p.id, title: p.title, type: p.type, text: p.text }));
+    }
+  }
+
+  async function savePrompt(p){
+    const { error } = await db.from('prompts').upsert(p);
+    if(error){ console.error('Save prompt failed', error); alert('Could not save to the database. Check your connection.'); }
+  }
+
+  async function deletePrompt(id){
+    const { error } = await db.from('prompts').delete().eq('id', id);
+    if(error){ console.error('Delete failed', error); alert('Could not delete from the database.'); }
+  }
+
+  async function init(){
+    await loadTags();
+    await loadPrompts();
+    renderFilters();
+    renderTypeOptions();
+    renderCards();
+  }
+
+  // ===== Filters (rendered dynamically from tagData) =====
+  function renderFilters(){
+    const buttons = [`<button class="filter-btn ${activeFilter==='all' ? 'active' : ''}" data-filter="all">All</button>`]
+      .concat(tagData.map(t => `<button class="filter-btn ${activeFilter===t.id ? 'active' : ''}" data-filter="${t.id}">${escapeHtml(t.label)}</button>`));
+    filterWrap.innerHTML = buttons.join('');
+  }
+
+  // ===== Type dropdown (rendered dynamically from tagData) =====
+  function renderTypeOptions(selected){
+    const options = tagData.map(t => `<option value="${t.id}">${escapeHtml(t.label)}</option>`).join('');
+    fieldType.innerHTML = options + `<option value="__add_new__">+ Add New Tag...</option>`;
+    if(selected) fieldType.value = selected;
+  }
+
+  // ===== Cards =====
+  function renderCards(){
+    const filtered = promptData.filter(p => {
+      const matchesFilter = activeFilter === 'all' || p.type === activeFilter;
+      const matchesSearch = p.title.toLowerCase().includes(searchTerm) || p.text.toLowerCase().includes(searchTerm);
+      return matchesFilter && matchesSearch;
+    });
+
+    countBadge.textContent = filtered.length + ' saved';
+
+    if(filtered.length === 0){
+      cardsGrid.innerHTML = '<div class="empty-state"><h3>No prompts found</h3><p>Try a different search term, filter, or add a new one.</p></div>';
+      return;
+    }
+
+    cardsGrid.innerHTML = filtered.map((p) => {
+      const tag = getTag(p.type);
+      return `
+      <div class="card" data-id="${p.id}">
+        <div class="card-top">
+          <h3>${escapeHtml(p.title)}</h3>
+          <div class="card-icon-actions">
+            <span class="type-pill" style="background:${tag.color}">${escapeHtml(tag.label)}</span>
+          </div>
+        </div>
+        <div class="prompt-box">${escapeHtml(p.text)}</div>
+        <div class="card-actions">
+          <button class="copy-btn" data-action="copy">Copy Prompt</button>
+          <button class="icon-btn edit-btn" data-action="edit" title="Edit">✎</button>
+          <button class="icon-btn delete-btn" data-action="delete" title="Delete">✕</button>
+        </div>
+      </div>
+    `;
+    }).join('');
+
+    cardsGrid.querySelectorAll('.card').forEach(cardEl => {
+      const id = cardEl.dataset.id;
+      const promptObj = promptData.find(p => p.id === id);
+
+      cardEl.querySelector('[data-action="copy"]').addEventListener('click', (e) => {
+        navigator.clipboard.writeText(promptObj.text).then(() => {
+          const btn = e.target;
+          btn.textContent = 'Copied ✓';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.textContent = 'Copy Prompt';
+            btn.classList.remove('copied');
+          }, 1500);
+        });
+      });
+
+      cardEl.querySelector('[data-action="edit"]').addEventListener('click', () => {
+        openModal(promptObj);
+      });
+
+      cardEl.querySelector('[data-action="delete"]').addEventListener('click', () => {
+        if(confirm(`Delete "${promptObj.title}"?`)){
+          promptData = promptData.filter(p => p.id !== id);
+          deletePrompt(id);
+          renderCards();
+        }
+      });
+    });
+  }
+
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // ===== Modal =====
+  function openModal(promptObj){
+    renderTypeOptions();
+    newTagGroup.style.display = 'none';
+    fieldNewTag.value = '';
+
+    if(promptObj){
+      editingId = promptObj.id;
+      modalTitle.textContent = 'Edit Prompt';
+      fieldTitle.value = promptObj.title;
+      fieldType.value = promptObj.type;
+      fieldText.value = promptObj.text;
+    } else {
+      editingId = null;
+      modalTitle.textContent = 'Add New Prompt';
+      fieldTitle.value = '';
+      fieldType.value = tagData[0] ? tagData[0].id : '__add_new__';
+      fieldText.value = '';
+    }
+    modalOverlay.classList.add('open');
+    fieldTitle.focus();
+  }
+
+  function closeModal(){
+    modalOverlay.classList.remove('open');
+    editingId = null;
+  }
+
+  fieldType.addEventListener('change', () => {
+    if(fieldType.value === '__add_new__'){
+      newTagGroup.style.display = 'block';
+      fieldNewTag.focus();
+    } else {
+      newTagGroup.style.display = 'none';
+    }
+  });
+
+  fabBtn.addEventListener('click', () => openModal(null));
+  cancelBtn.addEventListener('click', closeModal);
+  modalOverlay.addEventListener('click', (e) => {
+    if(e.target === modalOverlay) closeModal();
+  });
+
+  saveBtn.addEventListener('click', async () => {
+    const title = fieldTitle.value.trim();
+    let type = fieldType.value;
+    const text = fieldText.value.trim();
+
+    if(!title || !text){
+      alert('Please fill in both a heading and the prompt text.');
+      return;
+    }
+
+    // Handle new tag creation
+    if(type === '__add_new__'){
+      const newLabel = fieldNewTag.value.trim();
+      if(!newLabel){
+        alert('Please enter a name for the new tag.');
+        return;
+      }
+      const newId = slugify(newLabel);
+      const existing = tagData.find(t => t.id === newId);
+      if(existing){
+        type = existing.id;
+      } else {
+        const color = tagColorPalette[tagData.length % tagColorPalette.length];
+        tagData.push({ id: newId, label: newLabel, color });
+        await saveTags();
+        type = newId;
+        renderFilters();
+      }
+    }
+
+    let savedPrompt;
+    if(editingId){
+      const idx = promptData.findIndex(p => p.id === editingId);
+      if(idx !== -1){
+        promptData[idx] = { ...promptData[idx], title, type, text };
+        savedPrompt = promptData[idx];
+      }
+    } else {
+      savedPrompt = { id: genId('p'), title, type, text };
+      promptData.push(savedPrompt);
+    }
+
+    if(savedPrompt) savePrompt(savedPrompt);
+    closeModal();
+    renderCards();
+  });
+
+  searchInput.addEventListener('input', (e) => {
+    searchTerm = e.target.value.toLowerCase();
+    renderCards();
+  });
+
+  filterWrap.addEventListener('click', (e) => {
+    if(!e.target.classList.contains('filter-btn')) return;
+    activeFilter = e.target.dataset.filter;
+    renderFilters();
+    renderCards();
+  });
+
+  init();
+
+  // ===== PWA: Service Worker Registration =====
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(err => {
+        console.log('Service worker registration failed:', err);
+      });
+    });
+  }
+
+  // ===== PWA: Install Button =====
+  const installBtn = document.getElementById('installBtn');
+  const installModalOverlay = document.getElementById('installModalOverlay');
+  const installInstructions = document.getElementById('installInstructions');
+  const installModalCloseBtn = document.getElementById('installModalCloseBtn');
+  const INSTALLED_KEY = 'omnix-installed';
+  let deferredInstallPrompt = null;
+
+  function isStandalone(){
+    return window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true; // iOS Safari
+  }
+  function isIOS(){
+    return /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+  }
+  function wasInstalled(){
+    try{ return localStorage.getItem(INSTALLED_KEY) === '1'; } catch(e){ return false; }
+  }
+  function markInstalled(){
+    try{ localStorage.setItem(INSTALLED_KEY, '1'); } catch(e){}
+  }
+  function clearInstalled(){
+    try{ localStorage.removeItem(INSTALLED_KEY); } catch(e){}
+  }
+  function hideInstallBtn(){ installBtn.style.display = 'none'; }
+  function showInstallBtn(){ installBtn.style.display = 'inline-block'; }
+
+  // Button is hidden by default. It only appears when installing is actually possible.
+  hideInstallBtn();
+
+  if(isStandalone()){
+    // Running as the installed app
+    markInstalled();
+  } else if(!wasInstalled() && isIOS()){
+    // iOS has no install event, so show the button to display "Add to Home Screen" steps
+    showInstallBtn();
+  }
+
+  // Fires only when the browser says the app is NOT installed and can be installed
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+    clearInstalled(); // not installed (anymore), so forget any old flag
+    if(!isStandalone()) showInstallBtn();
+  });
+
+  installBtn.addEventListener('click', async () => {
+    if(deferredInstallPrompt){
+      deferredInstallPrompt.prompt();
+      const choice = await deferredInstallPrompt.userChoice;
+      if(choice.outcome === 'accepted'){
+        markInstalled();
+        hideInstallBtn();
+      }
+      deferredInstallPrompt = null;
+      return;
+    }
+
+    // iOS Safari fallback: manual steps
+    installInstructions.innerHTML = `
+      <p style="margin-bottom:12px;">Safari doesn't support one-tap install, but adding Omnix to your Home Screen only takes a few taps:</p>
+      <p style="margin-bottom:8px;">1. Tap the <strong>Share</strong> icon (square with an arrow) in Safari's toolbar.</p>
+      <p style="margin-bottom:8px;">2. Scroll down and tap <strong>Add to Home Screen</strong>.</p>
+      <p>3. Tap <strong>Add</strong> in the top right.</p>
+    `;
+    installModalOverlay.classList.add('open');
+  });
+
+  installModalCloseBtn.addEventListener('click', () => installModalOverlay.classList.remove('open'));
+  installModalOverlay.addEventListener('click', (e) => {
+    if(e.target === installModalOverlay) installModalOverlay.classList.remove('open');
+  });
+
+  // Fires right after a successful install
+  window.addEventListener('appinstalled', () => {
+    markInstalled();
+    hideInstallBtn();
+    deferredInstallPrompt = null;
+  });
+
+  // Hide if the page switches into app (standalone) mode
+  window.matchMedia('(display-mode: standalone)').addEventListener('change', (e) => {
+    if(e.matches){ markInstalled(); hideInstallBtn(); }
+  });
+</script>
+
+</body>
+</html>
